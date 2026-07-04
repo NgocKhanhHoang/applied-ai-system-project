@@ -1,0 +1,41 @@
+classDiagram
+    class Pet {
+        +String name
+        +String type
+        +String food
+        +pet_info() String
+        +need_care() bool
+    }
+
+    class Task {
+        +int duration
+        +String priority
+        +String location
+        +String specific_note
+        +is_urgent() bool
+    }
+
+    class Owner {
+        +List~Task~ tasks
+        +Pet pet
+        +Plan plan
+        +time_availability() int
+        +sort_tasks() List~Task~
+        +filter_by_urgency() List~Task~
+        +generate_plan() Plan
+    }
+
+    class Plan {
+        +List~Task~ tasks
+        +String reasoning
+        +display() void
+        +total_duration() int
+        +task_count() int
+    }
+
+    %% priority is an enum: HIGH / MED / LOW (represented as String)
+
+    Plan "1" *-- "*" Task : contains
+    Owner "1" o-- "1" Plan : has
+    Owner "1" o-- "*" Pet : has
+    Task ..> Pet : uses

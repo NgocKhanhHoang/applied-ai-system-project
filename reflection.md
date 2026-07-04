@@ -5,7 +5,11 @@
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+In the app, user can add a pet (name, origin), add daily tasks (duration + priority at minimum), generate a daily plan/ schedule based on the daily task (schedule a walk, feeding, enrichment, gromming with time availability, priority, owner preferences and reasoning for it).  
 - What classes did you include, and what responsibilities did you assign to each?
+Pet: name, origin
+Task: walking, feeding, enrichment, grooming
+Plan: daily task, duration, priority, reasoning
 
 **b. Design changes**
 
