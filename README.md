@@ -74,14 +74,28 @@ Sample test output:
 
 ## 📐 Smarter Scheduling
 
-> Fill in once you've implemented scheduling logic.
+All logic is in `pawpal_system.py`. `Scheduler.generate_plan()` ties it together:
+it filters tasks, sorts them, puts them on a clock, and checks for conflicts.
 
-| Feature | Method(s) | Notes |
-|---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+**Sorting**
+- `Scheduler.sort_tasks()` — by priority (High → Low), shorter task first on a tie.
+- `Scheduler.sort_by_time()` — earliest time first (the timeline you see in the plan).
+
+**Filtering**
+- `Scheduler.filter_by_pet()` — show only one pet's tasks.
+- `Scheduler.filter_by_status()` — done vs. to-do (the plan hides completed tasks).
+- `Scheduler.filter_by_priority()` — any priority level (`filter_by_urgency()` = High only).
+- `Scheduler.filter_due()` — keep only tasks due that day.
+
+**Conflict detection**
+- `Task.overlaps()` — true when two tasks' time windows overlap.
+- `Scheduler.detect_conflicts()` — finds every overlapping pair in the plan.
+- `Scheduler.describe_conflicts()` — prints a warning line for each conflict.
+
+**Recurring tasks**
+- `Frequency` enum — `DAILY` (every day) or `WEEKLY` (every 7 days).
+- `Task.is_due(day_index)` — decides if a task runs on a given day.
+- `Task.reset_for_new_day()` / `Owner.reset_day()` — reset tasks so they can be done again tomorrow.
 
 ## 📸 Demo Walkthrough
 

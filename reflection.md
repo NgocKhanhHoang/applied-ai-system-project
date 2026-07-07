@@ -25,13 +25,28 @@ My design changed in these ways:
 
 **a. Constraints and priorities**
 
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+My scheduler considers four constraints:
+1. **Priority**: how important/urgent a task is (High, Medium, Low).
+2. **Time budget**: the total minutes the owner has available that day. A task is only added if it still fits in the remaining time.
+3. **Fixed appointment times**: a task can be pinned to a specific time (e.g. a vet visit at 14:00); the scheduler keeps that time instead of moving it.
+4. **Recurrence and status**: tasks that are already completed, or not due that day (e.g. a weekly task on a non-scheduled day), are left out of the plan.
+
+In this app, priority mattered the most. I sort tasks by priority first, and use duration only as a tie-breaker (shorter tasks first when the priority is equal). So if a high-priority task has a long duration, the scheduler still fits it before a shorter, lower-priority task. I made this choice because a pet owner cares most about getting the important, urgent tasks done and the quick, less-important ones can wait or be skipped if time runs out.
+
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+1. **Flat, priority-ordered list vs. grouping by pet.**:
+Grouping by pet would show each pet's full checklist separately, but it hides the "what should I do first?" answer across all pets. I chose a single flat list ordered by priority (then displayed as a timeline) so the owner immediately knows what to do first, no matter which pet it's for.
+
+2. **Detecting conflicts but not resolving them.**:
+When flexible tasks (like walking or brushing) overlap a fixed task (like a vet appointment), the app only detects and flags the conflict, but it doesn't automatically fix it. The owner has to resolve it manually. This is reasonable because auto-rescheduling adds a lot of complexity, and the owner usually knows best how to shuffle their own day. Flagging the problem is enough to prevent a double-booking.
+
+3. **No end-of-day boundary.**:
+The scheduler limits tasks by total minutes available, but not by a wall-clock end time, so the timeline could technically run past bedtime. I accepted this because using one constraint (minutes) is simpler than tracking both a minute budget and a fixed daily window, and for a daily planner the minute budget already keeps the plan realistic.
+
+4. **Only two recurrence options (daily and weekly).**:
+I didn't add bi-weekly, monthly, or yearly frequencies. I kept it to daily and weekly so I could keep the recurrence logic simple and spend more time building the other features (sorting, filtering, and conflict detection). My design stores each frequency as a number of days, so adding more options later would be easy.
 
 ---
 
