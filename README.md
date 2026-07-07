@@ -58,19 +58,32 @@ Why: Scheduled 3 task(s) using 85/120 min, ordered by priority. 0 task(s) didn't
 
 ## 🧪 Testing PawPal+
 
+Run the tests from the project root:
+
 ```bash
-# Run the full test suite:
-pytest
-
-# Run with coverage:
-pytest --cov
+python -m pytest
 ```
 
-Sample test output:
+**What the tests cover:**
+
+- **Sorting** — tasks come back in chronological (earliest-first) order.
+- **Recurrence** — a daily task marked done comes back to-do the next day.
+- **Conflicts** — tasks at the same time are flagged as a conflict.
+- Plus edge cases: budget limits, tie-breaks, and back-to-back tasks.
+
+**Successful run:**
 
 ```
-# Paste your pytest output here
+============================= test session starts =============================
+platform win32 -- Python 3.14.5, pytest-9.1.1, pluggy-1.6.0
+collected 12 items
+
+tests\test_pawpal.py ............                                        [100%]
+
+============================= 12 passed in 0.18s ==============================
 ```
+
+**Confidence Level: ★★★★☆ (4/5)** — All 12 tests pass and cover the core scheduling logic. One star held back because the Streamlit UI (`app.py`) isn't tested yet.
 
 ## 📐 Smarter Scheduling
 
