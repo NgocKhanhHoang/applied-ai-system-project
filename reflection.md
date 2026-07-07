@@ -3,19 +3,22 @@
 ## 1. System Design
 
 **a. Initial design**
-
-- Briefly describe your initial UML design.
 In the app, user can add a pet (name, origin), add daily tasks (duration + priority at minimum), generate a daily plan/ schedule based on the daily task (schedule a walk, feeding, enrichment, gromming with time availability, priority, owner preferences and reasoning for it).  
-- What classes did you include, and what responsibilities did you assign to each?
-Pet: name, origin
-Task: walking, feeding, enrichment, grooming
-Plan: daily task, duration, priority, reasoning
+
+The system is made up of 4 classes and 1 enum:
+1. Pet: responsible for storing pet info (name, species, food, tasks) 
+   and determining what type of care the pet needs.
+2. Task responsible for storing the details of a single care activity: description, duration, priority, location, frequency, completed status, and specific notes.
+3. Owner: takes a pet, a list of tasks, and available time, then generates a plan by sorting and filtering tasks based  on priority and time constraints.
+4. Scheduler: responsible for the generated daily plan: an ordered set of tasks with total duration and task count.
+5. Priority (enum): helps the owner know the urgency of tasks by replacing plain numbers with readable labels (HIGH, MEDIUM, LOW).
 
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+My design changed in these ways:
 
+1. Priority: I changed values from strings to integers because with string values I can't sort directly. Alphabetically it would give high < low < medium, which is wrong. I'd have to build a separate ranking table just to sort. However, numbers give me that ranking for free.
+2. priority_label(): I changed the return type from bool to str because the output is displayed to the owner in the daily plan. A human reading a schedule understands "Priority: High" immediately, but would have to question what True/False means. I also renamed it from is_urgent() to priority_label() because the is_ prefix implies a yes/no boolean, which no longer matches what it returns. The label is built from the Priority enum's own name so it stays in sync automatically.
 ---
 
 ## 2. Scheduling Logic and Tradeoffs
