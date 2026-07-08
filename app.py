@@ -124,22 +124,49 @@ all_tasks = owner.all_tasks()
 if all_tasks:
     st.write("Current tasks:")
 
-    # Filter controls: narrow to one pet and/or hide finished tasks. The actual
-    # filtering lives in Scheduler so the UI just calls it (single source of truth).
+    # Filter + sort controls. All of the logic lives in Scheduler so the UI just
+    # calls it (single source of truth) — the table below is a direct view of what
+    # the algorithmic layer produces.
     sched = Scheduler()
-    fcol1, fcol2 = st.columns([2, 1])
+    fcol1, fcol2, fcol3 = st.columns([2, 2, 1])
     with fcol1:
         pet_filter = st.selectbox("Filter by pet", ["All pets"] + [p.name for p in owner.pets])
     with fcol2:
+        priority_filter = st.selectbox(
+            "Filter by priority", ["all", "urgent (high only)", "high", "medium", "low"]
+        )
+    with fcol3:
         hide_done = st.checkbox("Hide completed", value=False)
 
+    sort_mode = st.radio(
+        "Sort by",
+        ["As entered", "Priority (sort_tasks)", "Time (sort_by_time)"],
+        horizontal=True,
+    )
+
+    # Filtering — each branch delegates to a Scheduler method.
     shown = all_tasks
     if pet_filter != "All pets":
         shown = sched.filter_by_pet(shown, pet_filter)
+    if priority_filter == "urgent (high only)":
+        shown = sched.filter_by_urgency(shown)
+    elif priority_filter in PRIORITY_BY_LABEL:
+        shown = sched.filter_by_priority(shown, PRIORITY_BY_LABEL[priority_filter])
     if hide_done:
         shown = sched.filter_by_status(shown, completed=False)
 
+    # Sorting — reuse the same orderings the scheduler applies internally.
+    if sort_mode.startswith("Priority"):
+        shown = sched.sort_tasks(shown)
+    elif sort_mode.startswith("Time"):
+        shown = sched.sort_by_time(shown)
+
     if shown:
+        pending = sched.filter_by_status(shown, completed=False)
+        st.success(
+            f"Showing {len(shown)} task(s) — {len(pending)} to do, "
+            f"{len(shown) - len(pending)} done."
+        )
         st.table(
             [
                 {
@@ -148,13 +175,13 @@ if all_tasks:
                     "Duration (min)": t.duration,
                     "Priority": t.priority.name.title(),
                     "Location": t.location,
-                    "Status": "done" if t.completed else "todo",
+                    "Status": "✅ done" if t.completed else "⏳ todo",
                 }
                 for t in shown
             ]
         )
     else:
-        st.info("No tasks match the current filters.")
+        st.warning("No tasks match the current filters.")
 else:
     st.info("No tasks yet.")
 

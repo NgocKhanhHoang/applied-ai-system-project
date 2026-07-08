@@ -1,15 +1,80 @@
 classDiagram
-    %% Replace the placeholders below with your actual classes, attributes, methods, and relationships.
-    %% Keep this file updated so it matches your final implementation.
-
-    class ClassName {
-        +type attribute
-        +method() returnType
+    class Priority {
+        <<enumeration>>
+        HIGH
+        MEDIUM
+        LOW
+    }
+    class Frequency {
+        <<enumeration>>
+        DAILY
+        WEEKLY
     }
 
-    class AnotherClass {
-        +type attribute
-        +method() returnType
+    class Task {
+        +String description
+        +int duration
+        +Priority priority
+        +String location
+        +Frequency frequency
+        +bool completed
+        +String specific_note
+        +String pet_name
+        +int start_time
+        +int scheduled_start
+        +scheduled_end() int
+        +time_label() str
+        +priority_label() str
+        +is_due(day_index) bool
+        +overlaps(other) bool
+        +reset_for_new_day() void
+        +mark_complete() void
     }
 
-    ClassName --> AnotherClass : relationship
+    class Pet {
+        +String name
+        +String species
+        +String food
+        +List~Task~ tasks
+        +add_task(task) void
+        +pet_info() str
+    }
+
+    class Owner {
+        +String name
+        +List~Pet~ pets
+        +int available_minutes
+        +add_pet(pet) void
+        +time_availability() int
+        +all_tasks() List~Task~
+        +reset_day() void
+    }
+
+    class Scheduler {
+        +List~Task~ tasks
+        +String reasoning
+        +int day_start
+        +List conflicts
+        +List~Task~ skipped_tasks
+        +retrieve_tasks(owner) List~Task~
+        +sort_tasks(tasks) List~Task~
+        +sort_by_time(tasks) List~Task~
+        +filter_by_priority(tasks, level) List~Task~
+        +filter_by_urgency(tasks) List~Task~
+        +filter_by_pet(tasks, name) List~Task~
+        +filter_by_status(tasks, completed) List~Task~
+        +filter_due(tasks, day_index) List~Task~
+        +detect_conflicts(tasks) List
+        +describe_conflicts() List~str~
+        +generate_plan(owner, day_index) Scheduler
+        +total_duration() int
+        +task_count() int
+        +display() void
+    }
+
+    Owner "1" o-- "*" Pet : has
+    Pet "1" *-- "*" Task : owns
+    Scheduler "1" o-- "*" Task : plans
+    Scheduler ..> Owner : reads
+    Task ..> Priority : uses
+    Task ..> Frequency : uses
