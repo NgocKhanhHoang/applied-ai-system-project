@@ -3,7 +3,7 @@
 ## 1. System Design
 
 **a. Initial design**
-In the app, user can add a pet (name, origin), add daily tasks (duration + priority at minimum), generate a daily plan/ schedule based on the daily task (schedule a walk, feeding, enrichment, gromming with time availability, priority, owner preferences and reasoning for it).  
+In the app, user can add a pet (name, origin), add daily tasks (duration + priority at minimum), generate a daily plan/ schedule based on the daily task (schedule a walk, feeding, enrichment, grooming with time availability, priority, owner preferences and reasoning for it).  
 
 The system is made up of 4 classes and 1 enum:
 1. Pet: responsible for storing pet info (name, species, food, tasks) 
@@ -51,17 +51,17 @@ I didn't add bi-weekly, monthly, or yearly frequencies. I kept it to daily and w
 
 **a. How you used AI**
 I used AI mainly for 3 things: design brainstorming, debugging, and refactoring.
-1. Design brainstorming: Early on I described the app in plain English and asked how it recommend to split it into classes. This helped me land on the 4 classes structure plus the Priority enum, and it pushed me to keep scheduling logic in Owner/ Scheduler instad of piling it into Pet. 
-2. Debugging: When my sorting gae the wrong order, I pasted the actual output alongside what I expected and asked why it differed, rather than just asking for a fix. That's how I traced the bug back to sorting priorities as strings. 
+1. Design brainstorming: Early on I described the app in plain English and asked how it would recommend splitting it into classes. This helped me land on the 4-class structure plus the Priority enum, and it pushed me to keep scheduling logic in Owner/ Scheduler instead of piling it into Pet. 
+2. Debugging: When my sorting gave the wrong order, I pasted the actual output alongside what I expected and asked why it differed, rather than just asking for a fix. That's how I traced the bug back to sorting priorities as strings. 
 3. Refactoring: I asked AI to review method names and return types for readability once the logic worked. 
 
-The most helpful prompts were specific and included context. "Here's my code, here's the wrong result, why? got far better answers than "make a scheduler."
+The most helpful prompts were specific and included context. "Here's my code, here's the wrong result, why?" got far better answers than "make a scheduler."
 
 **b. Judgment and verification**
 
-I did not accept the AI suggestion for the Priority value. The initial appraoch used string values ("high", "medium", "low"). I rejected that because I realized that string sorting is alphabetical, which is wrong for my scheduler. I switched Priority to integers so sorting by urgency works for free without a seperate ranking table. 
+I did not accept the AI suggestion for the Priority value. The initial approach used string values ("high", "medium", "low"). I rejected that because I realized that string sorting is alphabetical, which is wrong for my scheduler. I switched Priority to integers so sorting by urgency works for free without a separate ranking table. 
 
-I verified the AI suggestions by tracing the logic myself and testing against expected output rather than trusting the code looked right. For the priority bug, I reasoned through wht alphabetical ordering would actually produce, then confirmed it by running the scheduler and checking the printed plan order. 
+I verified the AI suggestions by tracing the logic myself and testing against expected output rather than trusting the code looked right. For the priority bug, I reasoned through what alphabetical ordering would actually produce, then confirmed it by running the scheduler and checking the printed plan order. 
 
 ---
 
@@ -70,11 +70,11 @@ I verified the AI suggestions by tracing the logic myself and testing against ex
 **a. What you tested**
 
 I picked 5 behaviors that would quietly ruin the schedule if they were wrong: 
-1. The basic changes: making a task done actually changes its status, nd adding a task to a pet makes its task list longer. 
+1. The basic changes: making a task done actually changes its status, and adding a task to a pet makes its task list longer. 
 2. Sorting: tasks come out in the right order. The timeline is sorted by time, and the plan is sorted by priority first then by duration. I also checked that two tasks with the same priority and duration always sorted the same way, so the plan never randomly changes. 
 3. Recurrence: a daily task disappears once it's done today, then comes back the next day after I reset. A weekly task shows up on day 0 and day 7, but not on the days in between. 
-4. Conflicts: 2 tasks set in the same time get flagged, but 2 tasks back-to-back do not get flagged. The second case is the tricky one, so I want a test to prove I got the boundary right.
-5. Time budget: a task exactly fills the available time still gets included, add a task that's too big get skipped without blocking a smaller task that stll fits. 
+4. Conflicts: 2 tasks set at the same time get flagged, but 2 tasks back-to-back do not get flagged. The second case is the tricky one, so I wanted a test to prove I got the boundary right.
+5. Time budget: a task that exactly fills the available time still gets included, and a task that's too big gets skipped without blocking a smaller task that still fits. 
 
 These tests mattered because they lock in the exact rules I decided on. If I change the code later and accidentally break one of these, the test fails right away instead of the app just handing back a wrong schedule.
 
