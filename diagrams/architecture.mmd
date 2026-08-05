@@ -3,12 +3,14 @@ config:
   layout: fixed
 ---
 flowchart LR
-    A(["Input"]) --> B["Task / Constraint Data"]
-    B --> C["Planning Agent<br>(LLM)"]
+    A(["Input"]) --> B["Task / Constraint Data<br>(due + unfinished only)"]
+    B --> C["Planning Agent<br>(Gemini)"]
     C --> D["Evaluator: Check plan quality <br>(auto-check)"]
     D -- pass --> E["Human Review<br>(approve / edit)"]
-    D -- fail --> C
-    E -- approve --> F(["Final Plan"])
+    D -- fail, retry --> C
+    D -- fail 3x --> G["Rule-based Scheduler<br>(fallback)"]
+    G --> F(["Final Plan"])
+    E -- approve --> F
     E -- not accepted --> C
 
     D@{ shape: decision}
@@ -18,6 +20,7 @@ flowchart LR
     D:::check
     E:::review
     F:::final
+    G:::data
 
     classDef input fill:#eef2ff,stroke:#818cf8,color:#1e1b4b
     classDef data fill:#ecfeff,stroke:#22d3ee,color:#164e63

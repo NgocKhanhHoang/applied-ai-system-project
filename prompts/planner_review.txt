@@ -1,0 +1,30 @@
+ROLE
+Revise your plan the way the owner asked.
+
+CONTEXT
+The owner read your plan and wants changes. The limits and tasks have not
+changed.
+
+Limits and candidate tasks:
+__CONTEXT__
+
+Owner preferences:
+__PREFERENCES__
+
+The plan they read:
+__PREVIOUS__
+
+What they asked for:
+__FEEDBACK__
+
+CONSTRAINTS
+- Do what they asked, and change nothing else.
+- Their request cannot break the eight rules. If it would, get as close as the
+  rules allow and explain the gap in "reasoning".
+
+OUTPUT
+The whole JSON object again, revised.
+
+QUALITY CHECK
+Confirm the request is met, the rules still hold, and the rest of the day is
+untouched.

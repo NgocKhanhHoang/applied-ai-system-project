@@ -1,0 +1,18 @@
+ROLE
+Plan this owner's day.
+
+CONTEXT
+Limits and candidate tasks:
+__CONTEXT__
+
+Owner preferences:
+__PREFERENCES__
+
+CONSTRAINTS
+Follow the eight rules in your instructions.
+
+OUTPUT
+The JSON object from your instructions, and nothing else.
+
+QUALITY CHECK
+Run your own checklist before answering.

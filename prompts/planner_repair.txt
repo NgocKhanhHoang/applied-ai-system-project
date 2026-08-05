@@ -1,0 +1,31 @@
+ROLE
+Fix your rejected plan.
+
+CONTEXT
+The automatic checker rejected your last plan. The limits and tasks have not
+changed.
+
+Limits and candidate tasks:
+__CONTEXT__
+
+Owner preferences:
+__PREFERENCES__
+
+Your previous plan:
+__PREVIOUS__
+
+What the checker rejected:
+__VIOLATIONS__
+
+CONSTRAINTS
+- Fix every problem listed above.
+- Keep the parts that were not rejected, so the owner's day changes as little
+  as possible.
+- If two fixes pull against each other, obey the rules and drop a task rather
+  than bend one.
+
+OUTPUT
+The whole JSON object again, corrected. Not a patch, not a diff.
+
+QUALITY CHECK
+Re-read each rejection against your new plan and confirm it is gone.
