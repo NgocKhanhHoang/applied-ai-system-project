@@ -5,7 +5,7 @@
 a. The model's output is only checked where I had a clear right answer
 - The system double-checks 8 hard rules in code (no fake tasks, no double-booking, no moved appointments, no going over budget).
 But the AI also writes three things we can't check: care tips, its explanation for the plan, and its reason for skipping a task.
-A skipped task can even show up with a blank reason — even though that's the one thing an owner most wants explained.
+A skipped task can even show up with a blank reason, even though that's the one thing an owner most wants explained.
 
 b. Warnings can be approved, and repairs can quietly make things worse
 - Errors reject a plan and warnings only inform. That split is the design decision I'd defend hardest, but it means a plan carrying.
@@ -38,27 +38,24 @@ b. Warnings can be approved, and repairs can quietly make things worse
 ---
 
 ## 3. What surprised me while testing reliability
-- Bad plans often look reasonable. One plan scheduled a walk right before medicine time to avoid heat — sensible reasoning, but it caused a scheduling conflict. Only checking the actual numbers caught it.
-
-- Sometimes the AI was right and our rule was wrong. In one case, dropping a long walk to fit two smaller tasks (including medicine) was actually the better call — so we changed that rule from a hard error to a warning the owner decides on.
+- Bad plans often look reasonable. One plan scheduled a walk right before medicine time to avoid heat, but it caused a scheduling conflict. Only checking the actual numbers caught it.
+- Sometimes the AI was right and our rule was wrong. In one case, dropping a long walk to fit two smaller tasks (including medicine) was actually the better call so I changed that rule from a hard error to a warning the owner decides on.
 ---
 
 ## 4. Collaboration with AI
-
-Planning the design — describing the app idea and asking how to structure it into parts. This shaped the core structure of the system.
-Debugging — showing the AI the actual output vs. the expected output and asking why they differed (more effective than just asking for a fix).
-Cleanup — a final pass to improve naming and consistency.
+Planning the design: describing the app idea and asking how to structure it into parts. This shaped the core structure of the system.
+Debugging: showing the AI the actual output vs. the expected output and asking why they differed (more effective than just asking for a fix).
+Cleanup: a final pass to improve naming and consistency.
 
 Key takeaway: specific prompts with real context worked far better than vague ones. "Here's my code, here's the wrong result, why?" solved real bugs. "Build me a scheduler" produced code that looked fine but wasn't well understood.
 
 ### A helpful suggestion I accepted
 Suggestion: build the AI connection as a swappable component, so tests can use a fake version instead of the real AI service.
-
 Why it helped: this let me test how the system handles bad AI responses (fake task IDs, conflicts, broken data) instantly, without needing real API calls. More than half of all tests exist because of this one decision.
 
 
 ### A flawed suggestion I rejected
 - Suggestion: store task priority as text ("high", "medium", "low").
-- The problem: sorting text alphabetically puts them in the wrong order — "high" < "low" < "medium" — so low priority tasks would rank above medium ones. The code would run with no errors, but produce wrong schedules silently.
+- The problem: sorting text alphabetically puts them in the wrong order so low priority tasks would rank above medium ones. The code would run with no errors, but produce wrong schedules silently.
 - What I did instead: stored priority as ranked numbers (High = 1, Medium = 2, Low = 3), so sorting is always correct, and the readable label is generated from that.
 - How I caught it: I manually worked out what the sort order would actually look like before trusting it, then confirmed it by running the code and checking the real output.
