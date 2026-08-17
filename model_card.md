@@ -1,4 +1,4 @@
-# Model Card — PawPal+
+# Model Card 
 
 
 ## 1. Limitations and biases
