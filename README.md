@@ -1,4 +1,4 @@
-# 🐾 PawPal+: An Agentic Daily Pet Care Planner
+# 🐾 PawPal+
 
 PawPal+ turns a messy pile of pet-care chores into one timed schedule you can follow from top to bottom and it never trusts the language model to get the rules right.
 
